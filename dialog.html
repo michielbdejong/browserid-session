@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <body>
+    <form method="POST" action="">
+       <input type="hidden" name="assertion" id="assertion">
+    </form>
     <input type="submit" value="Sign in" id="button">
     <script src="https://browserid.org/include.js"></script>
     <script>
@@ -13,11 +16,14 @@
             options = {
               requiredEmail: parts[1]
             }
+            document.getElementById('button').value = 'Sign in as "'+parts[1]+'"';
             break;
           }
         }
         document.getElementById('button').onclick = function() {
           navigator.id.get(function(assertion) {
+            document.getElementById('assertion').value = assertion;
+            document.forms[0].submit();
           }, options);
         };
       })();

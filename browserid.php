@@ -28,9 +28,20 @@ class BrowserIDVerifier {
   
   public function requireAuth() {
     session_start();
-    if (!isset($_SESSION['browserid'])) {
-      die(file_get_contents($this->_config['absPath'].'/dialog.html'));
+    if (!isset($_SESSION['browserid_attr'])) {
+      if(isset($_POST['assertion'])) {
+        $result = $this->verifyAssertion($_POST['assertion'], 'http://lamp.unhosted.org');
+        if($result) {
+          $_SESSION['browserid_attr'] = $result;
+        } else {//var_dump($_POST);
+          die(file_get_contents($this->_config['absPath'].'/dialog.html'));
+        }
+        //var_dump($_SESSION);die();
+      } else {var_dump($_POST);
+        die(file_get_contents($this->_config['absPath'].'/dialog.html'));
+      }
     }
+      //var_dump($_SESSION);//die();
   }
   public function getAttributes() {
     return (isset($_SESSION['browserid_attr']) ? $_SESSION['browserid_attr'] : null);
