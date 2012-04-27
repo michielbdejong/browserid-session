@@ -5,6 +5,7 @@ class BrowserIDVerifier {
   
   public function __construct(array $config) {
     $this->_config = $config;
+    $this->_config['absPath'] = '/var/www/phpvoot/ext/browserid';
   }
 
   private function verifyAssertion($assertion, $audience) {
@@ -28,10 +29,10 @@ class BrowserIDVerifier {
   public function requireAuth() {
     session_start();
     if (!isset($_SESSION['browserid'])) {
-      $_SESSION['browserid_attr'] = array('email' => 'test@dummy.com');
+      die(file_get_contents($this->_config['absPath'].'/dialog.html'));
     }
   }
   public function getAttributes() {
-    return $_SESSION['browserid_attr'];
+    return (isset($_SESSION['browserid_attr']) ? $_SESSION['browserid_attr'] : null);
   }
 }
